@@ -12,23 +12,24 @@ puts array.each_slice(4) { |s| puts s.join(" ")}
 class Tree
   attr_accessor :children, :node_name, :level
 
-    def initialize(hash, level=0)
-      hash.each do |key,value|
-        @node_name = "#{' '*level}#{key}"
-        @children = value.map {|childk, childv| Tree.new({childk => childv}, level+1)}
-        @level = level
-      end
+  def initialize(hash, level=0)
+    hash.each do |rootK,rootV|
+      @node_name = "#{' ' * level}#{rootK}"
+      @children = rootV.map {|childk, childv| Tree.new({childk => childv}, level+1)}
+      @level = level
     end
+  end
 
-	  def visit_all(&block)
-	    visit &block
-	    children.each {|c| c.visit_all &block}
-	  end
+  def visit_all(&block)
+    visit &block
+    children.each {|c| c.visit_all &block}
+  end
 
-	  def visit(&block)
-      block.call self
-	  end
+	def visit(&block)
+    block.call self
 	end
+
+end
 
 tree = Tree.new('grandpa' => { 'dad' => {'child 1' => {}, 'child 2' => {} }, 'uncle' => {'child 3' => {}, 'child 4' => {} } } )
 
